@@ -12,6 +12,8 @@ const tokenMarketCap = document.querySelector(".marketCap");
 const tokenMarketCapTransformed = document.querySelector(
   ".marketCapTransformed"
 );
+const volumeTransformed = document.querySelector(".volumeTransformed");
+
 const tokenVolume = document.querySelector(".volume");
 const tokenSupply = document.querySelector(".supply");
 const tokenMaxSupply = document.querySelector(".maxSupply");
@@ -148,6 +150,8 @@ const getTokenData = (token, theCurrency) => {
           tokenImage.style.width = "45px";
         }
       }
+      document.querySelector(".DataContainer").style.display = "grid";
+      document.querySelector(".IntroSection").style.display = "grid";
       tokenName.innerText = res.data[0].name;
       tokenSymbol.innerText = res.data[0].currency;
       tokenPrice.innerText =
@@ -161,9 +165,13 @@ const getTokenData = (token, theCurrency) => {
         res.data[0].market_cap
       )} ${theCurrency === "USD" ? "$" : "€"})`;
 
-      tokenVolume.innerText = convertToInternationalCurrencySystem(
-        res.data[0]["1d"].volume
+      tokenVolume.innerText = numberWithCommas(
+        parseFloat(res.data[0]["1d"].volume)
       );
+      volumeTransformed.innerText = `(${convertToInternationalCurrencySystem(
+        res.data[0]["1d"].volume
+      )})`;
+      
       tokenSupply.innerText = convertToInternationalCurrencySystem(
         res.data[0].circulating_supply
       );
@@ -189,6 +197,7 @@ const changeCurrencyButton = () => {
     clearTimeout(timer);
     document.querySelector(".chartWarning").style.display = "none";
   }, 1500);
+
   if (currencySpan.innerText === "USD") {
     getTokenData(document.title, "EUR");
     currencySpan.innerText = "EUR";
